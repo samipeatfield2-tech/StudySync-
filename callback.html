@@ -11,10 +11,24 @@
         params[key] = decodeURIComponent(value);
       });
 
-      if (params.access_token) {
-        localStorage.setItem('spotify_access_token', params.access_token);
-        window.location.href = '/'; // Redirect to your dashboard
-      }
+      if (params.code) {
+  fetch('https://studysync-rb3m.onrender.com/get-token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ code: params.code })
+  })
+  .then(res => res.json())
+  .then(data => {
+    localStorage.setItem('spotify_access_token', data.access_token);
+    window.location.href = '/'; // Redirect to your dashboard
+  })
+  .catch(err => {
+    console.error('Token exchange failed:', err);
+  });
+}
+
     };
   </script>
 </head>
